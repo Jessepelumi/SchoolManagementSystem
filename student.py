@@ -3,7 +3,7 @@ import csv
 students = []
 
 print('Welcome to our student management system  ')
-opt = input('what would you like to do today? \n 1. Add New Student \n 2. View and Update Student Information \n 3. Search for a Student \n 4. Remove a student information \n')
+opt = input('what would you like to do today? \n 1. Add New Student \n 2. View  Student Information \n 3. Search for a Student to update details \n 4. Remove a student information \n')
 if opt == '1':
 
 
@@ -57,6 +57,7 @@ elif opt == '3':
     name = input('Enter the name of student you want to update \n')
     def update_student(name):
      filename = 'students_details.csv'
+     fieldnames = ['Name', 'Class', 'RollNumber', 'ContactInfo']
      updated_students = []
      with open(filename, 'r') as file:
         reader = csv.DictReader(file)
@@ -72,6 +73,7 @@ elif opt == '3':
                 row['RollNumber'] = updated_roll_number
                 row['ContactInfo'] = updated_contact_info
             updated_students.append(row)
+     
 
      with open(filename, 'w', newline='') as file: 
         writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -79,3 +81,34 @@ elif opt == '3':
         writer.writerows(updated_students)
         print('Student details updated in', filename)
     update_student(name)
+
+elif opt == '4':
+     name = input('eneter the name of student record you want to delete 😒😒')
+     def remove_student(name):
+      filename = 'students_details.csv'
+      tempfile = 'temp.csv'
+
+    
+      with open(filename, 'r') as file, open(tempfile, 'w', newline='') as temp:
+         reader = csv.DictReader(file)
+         fieldnames = reader.fieldnames
+
+        
+         writer = csv.DictWriter(temp, fieldnames=fieldnames)
+         writer.writeheader()
+
+       
+         for row in reader:
+            if row['Name'].lower() != name.lower():
+                writer.writerow(row)
+
+    
+      import os
+      os.replace(tempfile, filename)
+
+      print(f"The student '{name}' has been removed from the student details.")
+
+     remove_student(name)
+
+else:
+    print('Something went wrong, check the options and try again')
