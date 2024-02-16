@@ -1,10 +1,8 @@
 class Course:
-    def __init__(self, course_name, class_name, course, teacher):
+    def __init__(self, course_name, class_name, teacher_id):
         self.course_name = course_name
         self.class_name = class_name
-        self.course = course
-        self.teacher = teacher
+        self.teacher_id = teacher_id
 
     def __str__(self):
-        return f"Subject Name: {self.course_name}\nClass: {self.class_name}\nCourse: {self.course}\nTeacher: {self.teacher}"
-    
+        return f"Course Name: {self.course_name}\nClass: {self.class_name}\nTeacher ID: {self.teacher_id}"
