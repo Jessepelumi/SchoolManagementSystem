@@ -37,3 +37,5 @@ class AttendanceTracker:
             if student_attendance:
                 attendance_report[student.name] = student_attendance
         return attendance_report
+        print('checking if i can work on others code')
+        
