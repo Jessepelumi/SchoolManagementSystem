@@ -109,7 +109,7 @@ while True:
     elif command.lower() == 'remove':
         teacher_manager.remove_teacher()
     elif command.lower() == 'exit':
-        print("Exiting program. Goodbye!")
+        print("Exiting Teacher Management Section. Goodbye!")
         break
     else:
         print("Invalid command. Please enter a valid command.")
