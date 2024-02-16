@@ -1,15 +1,23 @@
 import csv
+import uuid
+import random
 
 students = []
 
 print('Welcome to our student management system  ')
+def generate_short_uuid():
+   
+       random_number = random.randint(0, 65535)  
+       uuid_string = format(random_number, '04x')
+
+       return uuid_string
 opt = input('what would you like to do today? \n 1. Add New Student \n 2. View  Student Information \n 3. Search for a Student to update details \n 4. Remove a student information \n')
 if opt == '1':
-
+    
 
      sname = input('Enter students full name: \n')
      sclass = input('Enter students class: \n')
-     srollNumber = input('Enter students roll number: \n')
+     srollNumber = generate_short_uuid()
      scontact = input('Enter students contact information: \n')
 
      class Student:
@@ -27,7 +35,8 @@ if opt == '1':
 
      with open(filename, 'a', newline='') as file:
          writer = csv.DictWriter(file, fieldnames=fieldnames)
-         writer.writeheader()
+         if file.tell() == 0:
+           writer.writeheader()
          for student in students:
           writer.writerow({
               'Name': student.name,
@@ -35,7 +44,7 @@ if opt == '1':
               'RollNumber': student.rollNumber,
               'ContactInfo': student.contactInfo
         })
-          print('Student details saved to', filename)
+          print(student.name,' details has been saved to', filename,'and the rollNumber = ', student.rollNumber)
 
 elif opt == '2':
     searchStudent = input('Enter the name of the student you are looking for: \n')
@@ -66,7 +75,7 @@ elif opt == '3':
                 print('Student found. Enter updated details:')
                 updated_name = input('Enter updated name: ')
                 updated_class = input('Enter updated class: ')
-                updated_roll_number = input('Enter updated roll number: ')
+                updated_roll_number = generate_short_uuid()
                 updated_contact_info = input('Enter updated contact info: ')
                 row['Name'] = updated_name
                 row['Class'] = updated_class
