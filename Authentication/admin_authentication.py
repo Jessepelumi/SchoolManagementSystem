@@ -18,3 +18,18 @@ class AdminAuthentication:
             if admin['Username'] == username and admin['Password'] == password:
                 return True
         return False
+    
+    def change_password(self, username, current_password, new_password):
+        for admin in self.admins:
+            if admin['Username'] == username and admin['Password'] == current_password:
+                admin['Password'] = new_password
+                self.save_data()
+                return True
+        return False
+    
+    def save_data(self):
+        with open(self.csv_file, 'w', newline='') as file:
+            fieldnames = ['Username', 'Password']
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(self.admins)
