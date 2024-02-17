@@ -1,5 +1,5 @@
 import csv
-from course import Course
+from CourseManagement.course import Course
 
 class CourseManagement:
     def __init__(self, file_path):

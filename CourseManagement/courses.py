@@ -1,4 +1,4 @@
-from course_management import CourseManagement
+from CourseManagement.course_management import CourseManagement
 
 def main():
     print("Welcome to the Course Manager")
