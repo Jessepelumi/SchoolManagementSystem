@@ -11,7 +11,7 @@ def generate_short_uuid():
        uuid_string = format(random_number, '04x')
 
        return uuid_string
-opt = input('what would you like to do today? \n 1. Add New Student \n 2. View  Student Information \n 3. Search for a Student to update details \n 4. Remove a student information \n')
+opt = input('what would you like to do today? \n 1. Add New Student \n 2. View  Student Information \n 3. Search for a Student to update details \n 4. Remove a student information \n 5. Mark Student Attendance \n')
 if opt == '1':
     
 
@@ -19,30 +19,38 @@ if opt == '1':
      sclass = input('Enter students class: \n')
      srollNumber = generate_short_uuid()
      scontact = input('Enter students contact information: \n')
+     sattendance = 0
 
      class Student:
-            def __init__(self, name, sClass, rollNumber, contactInfo):
+            def __init__(self, name, sClass, rollNumber, contactInfo, attendance):
                self.name = name.capitalize()
                self.sClass = sClass
                self.rollNumber = rollNumber
                self.contactInfo = contactInfo
+               self.attendance = attendance
+            
+            # def mark_attendance(self, date, status):
+            #     self.attendance[date] = status
 
-     stud = Student(sname, sclass, srollNumber, scontact)
+            # def view_attendance(self):
+            #   return self.attendance
+ 
+     stud = Student(sname, sclass, srollNumber, scontact, sattendance)
      students.append(stud)
 
      filename = 'students_details.csv'
-     fieldnames = ['Name', 'Class', 'RollNumber', 'ContactInfo']
+     fieldnames = ['Name', 'Class', 'RollNumber', 'ContactInfo','Attendance']
 
      with open(filename, 'a', newline='') as file:
          writer = csv.DictWriter(file, fieldnames=fieldnames)
-         if file.tell() == 0:
-           writer.writeheader()
+         writer.writeheader()
          for student in students:
           writer.writerow({
               'Name': student.name,
               'Class': student.sClass,
               'RollNumber': student.rollNumber,
-              'ContactInfo': student.contactInfo
+              'ContactInfo': student.contactInfo,
+              'Attendance' : student.attendance
         })
           print(student.name,' details has been saved to', filename,'and the rollNumber = ', student.rollNumber)
 
@@ -118,6 +126,37 @@ elif opt == '4':
       print(f"The student '{name}' has been removed from the student details.")
 
      remove_student(name)
+
+elif opt == '5' :
+    name = input('Enter the rollnumber of student to mark attendance \n')
+    def update_student(name):
+     filename = 'students_details.csv'
+     fieldnames = ['Name', 'Class', 'RollNumber', 'ContactInfo','Attendance']
+     updated_students = []
+     with open(filename, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['RollNumber'].lower() == name.lower():
+                times = row['Attendance']
+                st = row['Name'].upper()
+                print(f'{st} has attended this school {times} times')
+                value = int(row['Attendance'])
+
+                updated_att =  str(value + 1)
+                print(f'{st} attendance has been increased to {updated_att}')
+                row['Attendance'] = updated_att
+                # row['Class'] = updated_class
+                # row['RollNumber'] = updated_roll_number
+                # row['ContactInfo'] = updated_contact_info
+            updated_students.append(row)
+     with open(filename, 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(updated_students)
+    update_student(name)
+    print('Updated students attendance')
+   
+   
 
 else:
     print('Something went wrong, check the options and try again')

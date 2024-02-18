@@ -1,8 +1,22 @@
+import csv
 
 
-class AttendanceTracker:
-    def _init_(self):
+
+        
+class AttendanceTracker:             
+    def __init__(self, student_file):
         self.students = {}
+        self.student_file = student_file
+
+    def load_students(self):
+        with open(self.student_file, 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                name = row['Name']
+                sClass = row['Class']
+                contactInfo = row['ContactInfo']
+                roll_number = row['RollNumber']
+                self.students[roll_number] = Student(name, sClass, contactInfo)
 
     def add_student(self, name, roll_number):
         if roll_number not in self.students:
@@ -39,5 +53,7 @@ class AttendanceTracker:
             if student_attendance:
                 attendance_report[student.name] = student_attendance
         return attendance_report
-        print('checking if i can work on others code')
-        
+    
+student_file = 'students_details.csv'
+attendance_tracker = AttendanceTracker(student_file)
+attendance_tracker.load_students()
