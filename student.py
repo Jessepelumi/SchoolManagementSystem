@@ -1,6 +1,9 @@
 import csv
 import uuid
 import random
+import os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 students = []
 
