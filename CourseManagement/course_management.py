@@ -12,8 +12,8 @@ class CourseManagement:
         with open(self.file_path, mode="r") as file:
             reader = csv.DictReader(file)
             for row in reader:
-                course_name = course.Course(**row)
-                self.courses.append(course_name)
+                course_instance = course.Course(**row)
+                self.courses.append(course_instance)
 
     def save_courses(self):
         with open(self.file_path, mode="w", newline="") as file:
@@ -28,8 +28,8 @@ class CourseManagement:
         class_name = input("Enter class name: ").strip()
         teacher_id = input("Enter teacher id: ").strip()
         if course_name and class_name and teacher_id:
-            course = course.Course(course_name, class_name, teacher_id)
-            self.courses.append(course)
+            course_instance = course.Course(course_name, class_name, teacher_id)
+            self.courses.append(course_instance)
             self.save_courses()
             print("Course created successfully!")
         else:
@@ -37,9 +37,9 @@ class CourseManagement:
 
     def view_course(self):
         if self.courses:
-            for index, course_name in enumerate(self.courses, start=1):
+            for index, course_instance in enumerate(self.courses, start=1):
                 print(f"Course {index}:")
-                print(course_name)
+                print(course_instance)
         else:
             print("No courses available.")
 
