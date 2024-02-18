@@ -1,5 +1,6 @@
 import csv
-from CourseManagement.course import Course
+# from CourseManagement.course import Course
+import course
 
 class CourseManagement:
     def __init__(self, file_path):
@@ -11,7 +12,7 @@ class CourseManagement:
         with open(self.file_path, mode="r") as file:
             reader = csv.DictReader(file)
             for row in reader:
-                course_name = Course(**row)
+                course_name = course.Course(**row)
                 self.courses.append(course_name)
 
     def save_courses(self):
@@ -27,7 +28,7 @@ class CourseManagement:
         class_name = input("Enter class name: ").strip()
         teacher_id = input("Enter teacher id: ").strip()
         if course_name and class_name and teacher_id:
-            course = Course(course_name, class_name, teacher_id)
+            course = course.Course(course_name, class_name, teacher_id)
             self.courses.append(course)
             self.save_courses()
             print("Course created successfully!")
@@ -50,15 +51,12 @@ class CourseManagement:
             print("Enter new details (leave blank to keep current value):")
             new_course_name = input("Enter new course name: ").strip()
             new_class_name = input("Enter new class name: ").strip()
-            new_course = input("Enter new course: ").strip()
             new_teacher = input("Enter new teacher: ").strip()
 
             if new_course_name:
                 course.course_name = new_course_name
             if new_class_name:
                 course.class_name = new_class_name
-            if new_course:
-                course.course = new_course
             if new_teacher:
                 course.teacher = new_teacher
 
