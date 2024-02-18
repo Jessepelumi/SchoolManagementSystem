@@ -1,4 +1,5 @@
-from CourseManagement.course_management import CourseManagement
+
+import course_management
 
 def main():
     print("Welcome to the Course Manager")
@@ -6,7 +7,7 @@ def main():
     print("Enter the following commands to perform the corresponding operations")
     print("1: Create courses\n2: View courses\n3: Update courses\n4: Delete courses")
 
-    course_manager = CourseManagement(file_path="courses.csv")
+    course_manager = course_management.CourseManagement(file_path = "CourseManagement/courses.csv")
 
     while True:
         command = input("Enter your preferred command or 'q' to quit: ")
