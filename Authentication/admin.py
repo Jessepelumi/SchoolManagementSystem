@@ -3,6 +3,7 @@ sys.path.append(".")
 
 from admin_authentication import AdminAuthentication
 from TeacherManagement.teacher_management import Teachers
+from CourseManagement.course_management import Courses
 # import TeacherManagement.teacher_management
 
 class Admin:
@@ -24,6 +25,10 @@ class Admin:
                 # teacher dashboard here
                 teacher_manager = Teachers()
                 teacher_manager.run()
+            elif command == "3":
+                # course dashboard here
+                course_manager = Courses()
+                course_manager.run()
             elif command == "4":
                 # change administrator credentials module here
                 username = input("Enter username: ")
