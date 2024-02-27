@@ -2,7 +2,7 @@ import sys
 sys.path.append(".")
 
 from admin_authentication import AdminAuthentication
-from TeacherManagement.teachersss import TeacherManagement
+from TeacherManagement.teacher_management import Teachers
 # import TeacherManagement.teacher_management
 
 class Admin:
@@ -22,7 +22,8 @@ class Admin:
             command = input("Enter the appropriate command or 'q' to Quit: ")
             if command == "1":
                 # teacher dashboard here
-                TeacherManagement()
+                teacher_manager = Teachers()
+                teacher_manager.run()
             elif command == "4":
                 # change administrator credentials module here
                 username = input("Enter username: ")
