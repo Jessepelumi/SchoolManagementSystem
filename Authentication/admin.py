@@ -2,44 +2,43 @@ import sys
 sys.path.append(".")
 
 from admin_authentication import AdminAuthentication
-from TeacherManagement.teachers import TeacherManagement
+from TeacherManagement.teachersss import TeacherManagement
+# import TeacherManagement.teacher_management
 
-def main():
-    print("You are now in the admin dashboard")
-    print("Do you want to work on the teacher dashboard")
+class Admin:
+    def __init__(self):
+        self.admin_authenticator = AdminAuthentication()
 
-    admin_authenticator = AdminAuthentication()
-    teacher_manager = TeacherManagement()
+    def main(self):
+        print("You are now in the admin dashboard")
+        print("What do you want to do?")
+        print("Enter the following commands to perform the corresponding operations")
+        print("1: Manage Teachers")
+        print("2: Manage Students")
+        print("3: Manage Courses")
+        print("4: Update credentials")
 
-    while True:
-        command = input("y for Yes; n for No; q to Quit: ")
-        if command.lower() == "y":
-            # teacher dashboard here
-            TeacherManagement()
-        elif command.lower() == "n":
-            print("Will you like to change administrator's credentials?")
-            sub_command = input("y for Yes; n for No: ")
-            if sub_command.lower() == "y":
+        while True:
+            command = input("Enter the appropriate command or 'q' to Quit: ")
+            if command == "1":
+                # teacher dashboard here
+                TeacherManagement()
+            elif command == "4":
                 # change administrator credentials module here
                 username = input("Enter username: ")
                 current_password = input("Enter your current password: ")
                 new_password = input("Enter your new password: ")
 
-                if admin_authenticator.change_password(username, current_password, new_password):
-                    print("Passwword sucessfully changed")
+                if self.admin_authenticator.change_password(username, current_password, new_password):
+                    print("Password successfully changed")
                 else:
                     print("Failed to change password. Check username and current password.")
-
-            elif sub_command.lower() == "n":
-                print("Exiting...")
+            elif command.lower() == "q":
+                print("Exiting admin dashboard...")
                 break
             else:
-                print("Invalid command. Enter y for Yes or n for No")
-        elif command.lower() == "q":
-            print("Exiting admin dashboard...")
-            break
-        else:
-            print("Invalid command. Enter y for Yes, n for No or q to Quit")
+                print("Invalid command. Enter y for Yes, n for No, or q to Quit")
 
 if __name__ == "__main__":
-    main()
+    admin = Admin()
+    admin.main()
