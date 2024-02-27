@@ -1,6 +1,18 @@
 import csv
-# from CourseManagement.course import Course
-import course
+import uuid
+
+class Course:
+    def __init__(self, course_name, course_id, class_name, teacher_id):
+        self.course_name = course_name
+        self.course_id = course_id
+        self.class_name = class_name
+        self.teacher_id = teacher_id
+
+    def __str__(self):
+        return f"Course Name: {self.course_name}\nCourse ID: {self.course_id}\nClass: {self.class_name}\nTeacher ID: {self.teacher_id}"
+
+def generate_course_id():
+    return str(uuid.uuid4())[:4]
 
 class CourseManagement:
     def __init__(self, file_path):
@@ -9,15 +21,16 @@ class CourseManagement:
 
     def load_courses(self):
         self.courses = []
+        self.course_ids = set()
         with open(self.file_path, mode="r") as file:
             reader = csv.DictReader(file)
             for row in reader:
-                course_instance = course.Course(**row)
+                course_instance = Course(**row)
                 self.courses.append(course_instance)
 
     def save_courses(self):
         with open(self.file_path, mode="w", newline="") as file:
-            fieldnames = ["course_name", "class_name", "teacher_id"]
+            fieldnames = ["course_name", "course_id", "class_name", "teacher_id"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for course in self.courses:
@@ -28,8 +41,12 @@ class CourseManagement:
         class_name = input("Enter class name: ").strip()
         teacher_id = input("Enter teacher id: ").strip()
         if course_name and class_name and teacher_id:
-            course_instance = course.Course(course_name, class_name, teacher_id)
+            course_id = generate_course_id()
+            while course_id in self.course_ids:
+                course_id = generate_course_id()
+            course_instance = Course(course_name, course_id, class_name, teacher_id)
             self.courses.append(course_instance)
+            self.course_ids.add(course_id)
             self.save_courses()
             print("Course created successfully!")
         else:
@@ -43,32 +60,106 @@ class CourseManagement:
         else:
             print("No courses available.")
 
-    def update_course(self, index):
-        if 1 <= index <= len(self.courses):
-            course = self.courses[index - 1]
-            print("Current course details:")
-            print(course)
-            print("Enter new details (leave blank to keep current value):")
-            new_course_name = input("Enter new course name: ").strip()
-            new_class_name = input("Enter new class name: ").strip()
-            new_teacher = input("Enter new teacher: ").strip()
+    def search_course_by_id(self, course_id):
+        found = False
+        for course_instance in self.courses:
+            if course_instance.course_id == course_id:
+                print("Course found:")
+                print(course_instance)
+                found = True
+                break
 
-            if new_course_name:
-                course.course_name = new_course_name
-            if new_class_name:
-                course.class_name = new_class_name
-            if new_teacher:
-                course.teacher = new_teacher
+        if not found:
+            print("Course not found.")
 
-            self.save_courses()
-            print("Course updated successfully!")
-        else:
-            print("Invalid index")
+    def search_course_by_name(self, name):
+        found = False
+        for course_instance in self.courses:
+            if course_instance.course_name.lower() == name.lower():
+                print("Course found:")
+                print(course_instance)
+                found = True
 
-    def delete_course(self, index):
-        if 1 <= index <= len(self.courses):
-            del self.courses[index - 1]
-            self.save_courses()
-            print("Course deleted successfully!")
-        else:
-            print("Invalid index. No course deleted.")
+        if not found:
+            print("Course not found.")
+
+    def update_course(self, course_id):
+        found = False
+        for course_instance in self.courses:
+            if course_instance.course_id == course_id:
+                print("Current course details: ")
+                print(course_instance)
+                print("Enter new details (leave blank to keep current value):")
+                new_course_name = input("Enter new course name: ").strip()
+                new_class_name = input("Enter new class name: ").strip()
+                new_teacher = input("Enter new teacher: ").strip()
+            
+                if new_course_name:
+                    course_instance.course_name = new_course_name
+                if new_class_name:
+                    course_instance.class_name = new_class_name
+                if new_teacher:
+                    course_instance.teacher = new_teacher
+
+                found = True
+                break
+
+        if not found:
+            print("Course not found")
+
+        self.save_courses()
+        print("Course details updated successfully!")
+
+    def delete_course(self, course_id):
+        for i, course_instance in enumerate(self.courses):
+            if course_instance.course_id == course_id:
+                del self.courses[i]
+                self.save_courses()
+                print("Course details deleted successfully!")
+                return
+        print("Course not found.")
+
+class Courses():
+    def __init__(self):
+        self.course_manager = CourseManagement(file_path = "CourseManagement/courses.csv")
+
+    def run(self):
+        print("Welcome to the Course Manager")
+        print("What do you want to do?")
+        print("Enter the following commands to perform the corresponding operations")
+        print("Create courses -> 1")
+        print("View courses -> 2")
+        print("Search courses by ID -> 3")
+        print("Search courses by name -> 4")
+        print("Update courses -> 5")
+        print("Delete courses -> 6")
+        print("Exit -> 'q'")
+
+        while True:
+            command = input("Enter your preferred command or 'q' to quit: ")
+
+            if command == '1':
+                self.course_manager.create_course()
+            elif command == '2':
+                self.course_manager.view_course()
+            elif command == '3':
+                course_id = input("Enter the ID of the course to search: ")
+                self.course_manager.search_course_by_id(course_id)
+            elif command == '4':
+                course_name = input("Enter the name of the course to search: ")
+                self.course_manager.search_course_by_name(course_name)
+            elif command == '5':
+                index = input("Enter the ID of the course to update: ")
+                self.course_manager.update_course(index)
+            elif command == '6':
+                index = input("Enter the ID of the course to delete: ")
+                self.course_manager.delete_course(index)
+            elif command.lower() == 'q':
+                print("Exiting Course Manager...")
+                break
+            else:
+                print("Invalid command. Please enter a valid command")
+
+if __name__ == "__main__":
+    manager = Courses()
+    manager.run()
