@@ -4,7 +4,6 @@ sys.path.append(".")
 from admin_authentication import AdminAuthentication
 from TeacherManagement.teacher_management import Teachers
 from CourseManagement.course_management import Courses
-# import TeacherManagement.teacher_management
 
 class Admin:
     def __init__(self):
