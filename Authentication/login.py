@@ -7,7 +7,7 @@ print("1 - Login as administrator\n2 - Log in as teacher\nq - Quit")
 while True:
     command = input("Enter your preferred command or 'q' to quit: ")
     if command == "1":
-        
+
         username = input("Enter your username: ")
         password = input("Enter your password: ")
 
@@ -17,7 +17,7 @@ while True:
             print("Login successful. Redirecting to admin dashboard...")
             admin.main()
         else:
-            print("Authentication failed. Invalid username or password.")
+            print("Login failed. Wrong username or password.")
     elif command == "2":
         # code for teacher login
         pass
