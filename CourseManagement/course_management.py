@@ -2,14 +2,20 @@ import csv
 import uuid
 
 class Course:
-    def __init__(self, course_name, course_id, class_name, teacher_id):
+    def __init__(self, course_name, course_id, class_name):
         self.course_name = course_name
         self.course_id = course_id
         self.class_name = class_name
-        self.teacher_id = teacher_id
+        self.teacher_id = None
 
     def __str__(self):
-        return f"Course Name: {self.course_name}\nCourse ID: {self.course_id}\nClass: {self.class_name}\nTeacher ID: {self.teacher_id}"
+        if self.teacher_id:
+            return f"Course Name: {self.course_name}\nCourse ID: {self.course_id}\nClass: {self.class_name}\nTeacher ID: {self.teacher_id}"
+        else:
+            return f"Course Name: {self.course_name}\nCourse ID: {self.course_id}\nClass: {self.class_name}\nTeacher ID: Not assigned"
+    
+    def assign_teacher(self, teacher_id):
+        self.teacher_id = teacher_id
 
 def generate_course_id():
     return str(uuid.uuid4())[:4]
@@ -39,18 +45,34 @@ class CourseManagement:
     def create_course(self):
         course_name = input("Enter course name: ").strip()
         class_name = input("Enter class name: ").strip()
-        teacher_id = input("Enter teacher id: ").strip()
-        if course_name and class_name and teacher_id:
+        # teacher_id = input("Enter teacher id: ").strip()
+        if course_name and class_name:
             course_id = generate_course_id()
             while course_id in self.course_ids:
                 course_id = generate_course_id()
-            course_instance = Course(course_name, course_id, class_name, teacher_id)
+            course_instance = Course(course_name, course_id, class_name)
             self.courses.append(course_instance)
             self.course_ids.add(course_id)
             self.save_courses()
             print("Course created successfully!")
         else:
             print("Invalid input. Course not created.")
+
+    def assign_teacher_to_course(self, course_id, teacher_id):
+        # Find the course with the given ID
+        course = None
+        for course_instance in self.courses:
+            if course_instance.course_id == course_id:
+                course = course_instance
+                break
+
+        if course:
+            # Assign the teacher to the course
+            course.assign_teacher(teacher_id)
+            self.save_courses()
+            print("Teacher assigned to course successfully!")
+        else:
+            print("Course not found.")
 
     def view_course(self):
         if self.courses:
@@ -92,14 +114,14 @@ class CourseManagement:
                 print("Enter new details (leave blank to keep current value):")
                 new_course_name = input("Enter new course name: ").strip()
                 new_class_name = input("Enter new class name: ").strip()
-                new_teacher = input("Enter new teacher: ").strip()
+                # new_teacher = input("Enter new teacher: ").strip()
             
                 if new_course_name:
                     course_instance.course_name = new_course_name
                 if new_class_name:
                     course_instance.class_name = new_class_name
-                if new_teacher:
-                    course_instance.teacher = new_teacher
+                # if new_teacher:
+                #     course_instance.teacher = new_teacher
 
                 found = True
                 break
@@ -131,8 +153,9 @@ class Courses():
         print("View courses -> 2")
         print("Search courses by ID -> 3")
         print("Search courses by name -> 4")
-        print("Update courses -> 5")
-        print("Delete courses -> 6")
+        print("Assign teacher -> 5")
+        print("Update courses -> 6")
+        print("Delete courses -> 7")
         print("Exit -> 'q'")
 
         while True:
@@ -149,9 +172,13 @@ class Courses():
                 course_name = input("Enter the name of the course to search: ")
                 self.course_manager.search_course_by_name(course_name)
             elif command == '5':
+                course_id = input("Enter the ID of the course: ")
+                teacher_id = input("Enter the ID of the teacher to assign: ")
+                self.course_manager.assign_teacher_to_course(course_id, teacher_id)
+            elif command == '6':
                 index = input("Enter the ID of the course to update: ")
                 self.course_manager.update_course(index)
-            elif command == '6':
+            elif command == '7':
                 index = input("Enter the ID of the course to delete: ")
                 self.course_manager.delete_course(index)
             elif command.lower() == 'q':
