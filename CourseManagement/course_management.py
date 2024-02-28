@@ -1,5 +1,6 @@
 import csv
 import uuid
+import os
 
 class Course:
     def __init__(self, course_name, course_id, class_name):
@@ -23,7 +24,15 @@ def generate_course_id():
 class CourseManagement:
     def __init__(self, file_path):
         self.file_path = file_path
+        self.ensure_file_exists()
         self.load_courses()
+
+    def ensure_file_exists(self):
+        if not os.path.exists(self.file_path):
+            with open(self.file_path, mode="w", newline="") as file:
+                fieldnames = ["course_name", "course_id", "class_name", "teacher_id"]
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
 
     def load_courses(self):
         self.courses = []
@@ -45,7 +54,6 @@ class CourseManagement:
     def create_course(self):
         course_name = input("Enter course name: ").strip()
         class_name = input("Enter class name: ").strip()
-        # teacher_id = input("Enter teacher id: ").strip()
         if course_name and class_name:
             course_id = generate_course_id()
             while course_id in self.course_ids:
@@ -120,8 +128,6 @@ class CourseManagement:
                     course_instance.course_name = new_course_name
                 if new_class_name:
                     course_instance.class_name = new_class_name
-                # if new_teacher:
-                #     course_instance.teacher = new_teacher
 
                 found = True
                 break

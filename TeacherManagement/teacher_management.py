@@ -1,15 +1,16 @@
 import csv
 import uuid
+import os
 
 class Teacher:
-    def __init__(self, teacher_name, teacher_id, contract_info):
+    def __init__(self, teacher_name, teacher_id, contact_info):
         self.teacher_name = teacher_name
         self.teacher_id = teacher_id
         self.courses = []
-        self.contract_info = contract_info
+        self.contact_info = contact_info
 
     def __str__(self):
-        return f"Name: {self.teacher_name}\nTeacher ID: {self.teacher_id}\nCourses: {self.courses}\nContract Info: {self.contract_info}"
+        return f"Name: {self.teacher_name}\nTeacher ID: {self.teacher_id}\nCourses: {self.courses}\nContract Info: {self.contact_info}"
     
     def assign_course(self, course_id):
         self.courses.append(course_id)
@@ -20,7 +21,15 @@ def generate_teacher_id():
 class TeacherManagement:
     def __init__(self, file_path):
         self.file_path = file_path
+        self.ensure_file_exists()
         self.load_teachers()
+
+    def ensure_file_exists(self):
+        if not os.path.exists(self.file_path):
+            with open(self.file_path, mode="w", newline="") as file:
+                fieldnames = ["teacher_name", "teacher_id", "courses", "contact_info"]
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
 
     def load_teachers(self):
         self.teachers = []
@@ -34,7 +43,7 @@ class TeacherManagement:
 
     def save_teachers(self):
         with open(self.file_path, mode="w", newline="") as file:
-            fieldnames = ["teacher_name", "teacher_id", "courses", "contract_info"]
+            fieldnames = ["teacher_name", "teacher_id", "courses", "contact_info"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for teacher in self.teachers:
@@ -42,14 +51,12 @@ class TeacherManagement:
 
     def create_teacher(self):
         teacher_name = input("Enter teacher name: ").strip()
-        # teacher_id = input("Enter teacher id: ").strip()
-        # course = input("Enter assigned course: ").strip()
-        contract_info = input("Enter the contract details: ").strip()
-        if teacher_name and contract_info:
+        contact_info = input("Enter the contact details: ").strip()
+        if teacher_name and contact_info:
             teacher_id = generate_teacher_id()
             while teacher_id in self.teacher_ids:
                 teacher_id = generate_teacher_id()
-            teacher_instance = Teacher(teacher_name, teacher_id, contract_info)
+            teacher_instance = Teacher(teacher_name, teacher_id, contact_info)
             self.teachers.append(teacher_instance)
             self.teacher_ids.add(teacher_id)
             self.save_teachers()
@@ -117,10 +124,8 @@ class TeacherManagement:
 
                 if new_teacher_name:
                     teacher_instance.teacher_name = new_teacher_name
-                # if new_course:
-                #     teacher_instance.course = new_course
                 if new_contract:
-                    teacher_instance.contract_info = new_contract
+                    teacher_instance.contact_info = new_contract
 
                 found = True
                 break
