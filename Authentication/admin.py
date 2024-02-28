@@ -1,4 +1,3 @@
-import csv
 import sys
 sys.path.append(".")
 
@@ -6,17 +5,17 @@ from TeacherManagement.teacher_management import Teachers
 from CourseManagement.course_management import Courses
 
 class AdminAuthentication:
-    def __init__(self, csv_file='Authentication/admin_credentials.csv'):
-        self.csv_file = csv_file
+    def __init__(self, txt_file='Authentication/admin_credentials.txt'):
+        self.txt_file = txt_file
         self.admins = self.load_data()
 
     def load_data(self):
         try:
             admins = []
-            with open(self.csv_file, 'r') as file:
-                reader = csv.DictReader(file)
-                for row in reader:
-                    admins.append(row)
+            with open(self.txt_file, 'r') as file:
+                for line in file:
+                    username, password = line.strip().split(',')
+                    admins.append({'Username': username, 'Password': password})
             return admins
         except FileNotFoundError:
             return []
@@ -36,11 +35,9 @@ class AdminAuthentication:
         return False
     
     def save_data(self):
-        with open(self.csv_file, 'w', newline='') as file:
-            fieldnames = ['Username', 'Password']
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(self.admins)
+        with open(self.txt_file, 'w') as file:
+            for admin in self.admins:
+                file.write(f"{admin['Username']},{admin['Password']}\n")
 
 class Admin:
     def __init__(self):
