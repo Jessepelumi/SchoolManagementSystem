@@ -1,3 +1,5 @@
-# this is a test, ignore all text files
-*.txt
+# ignore all csv files
 *.csv
+
+# ignore all pycache files
+/__pycache__/*
