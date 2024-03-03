@@ -1,6 +1,5 @@
 # ignore all csv files
-*.txt
 *.csv
 
 # ignore all pycache files
-/__pycache/*
+/pycache/*
